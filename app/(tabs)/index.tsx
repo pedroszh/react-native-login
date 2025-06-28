@@ -1,75 +1,119 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import React, {useState} from "react";
+import { View, Text, TextInput, Pressable, StyleSheet} from "react-native";
+import { useRouter } from "expo-router";
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
 
-export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+export default function LoginScreen(){
+  const router = useRouter();
+  const [Email, setEmail] = useState(''); 
+  const [Senha, setSenha] = useState(''); 
+  const [Lembrar, setLembrar] = useState(false);
+  const [erro, setErro] = useState('');
+  return(
+    <View style={styles.container}>
+      <Text style={styles.title}>Login</Text>
+
+      <TextInput 
+      placeholder="Email"
+      value = {Email}
+      onChangeText={setEmail}
+      style={styles.input}
+      />
+
+      
+      <TextInput 
+      placeholder="Senha"
+      value= {Senha}
+      onChangeText={setSenha}
+      secureTextEntry
+      style={styles.input}/>
+
+    
+        {erro !== '' && (
+    <Text style={styles.erroTexto}>{erro}</Text>
+  )}
+
+  <Pressable
+  onPress={() => setLembrar (!Lembrar)}>
+    <Text>{Lembrar ? '✓': '☐'} Lembrar senha</Text>
+
+
+  </Pressable>
+  
+  <Pressable style={styles.button} onPress={()=> {
+    if (!Email || !Senha){
+      setErro('Preencha todos os campos')
+      return;
+    }
+    setErro('');
+
+    alert(`Email: ${Email}\nSenha: ${Senha}\nLembrar: ${Lembrar ? 'Sim' : 'Não'}`);
+  }}>
+
+
+    <Text style={styles.buttonText}>Entrar</Text>
+  </Pressable>
+
+  <Pressable onPress={() => router.push('/cadastro')}>
+    <Text style={styles.linkText}>Não tenho conta? Cadastre-se</Text>
+  </Pressable>
+    
+    </View>
   );
 }
 
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 32,
+    justifyContent: 'center',
+    backgroundColor: '#ffffff',
   },
-  stepContainer: {
-    gap: 8,
+  title: {
+    fontSize: 32,
+    fontWeight: 'bold',
     marginBottom: 8,
+    textAlign: 'center',
+    color: '#333',
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  subtitle: {
+    fontSize: 16,
+    marginBottom: 24,
+    textAlign: 'center',
+    color: '#666',
+  },
+  input: {
+    backgroundColor: '#f0f0f0',
+    padding: 14,
+    marginBottom: 15,
+    borderRadius: 10,
+    fontSize: 16,
+  },
+  checkboxText: {
+    marginBottom: 20,
+    color: '#333',
+  },
+  button: {
+    backgroundColor: '#007AFF',
+    padding: 16,
+    borderRadius: 10,
+    marginBottom: 20,
+  },
+  buttonText: {
+    color: '#fff',
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  linkText: {
+    color: '#007AFF',
+    textAlign: 'center',
+    textDecorationLine: 'underline',
+    fontSize: 14,
+  },
+  erroTexto: {
+    color: 'red',
+    marginBottom: 16,
+    textAlign: 'center'
   },
 });
